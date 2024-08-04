@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pallet Fit Checker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Pallet Fit Checker</h1>
+    <form method="post">
+        <label for="pallet_length">Pallet Length (in inches):</label>
+        <input type="text" id="pallet_length" name="pallet_length" value="{{ form_data['pallet_length'] }}"><br><br>
+
+        <label for="pallet_width">Pallet Width (in inches):</label>
+        <input type="text" id="pallet_width" name="pallet_width" value="{{ form_data['pallet_width'] }}"><br><br>
+
+        <label for="pallet_height">Pallet Height (in inches):</label>
+        <input type="text" id="pallet_height" name="pallet_height" value="{{ form_data['pallet_height'] }}"><br><br>
+
+        <label for="num_pallets">Number of Pallets:</label>
+        <input type="text" id="num_pallets" name="num_pallets" value="{{ form_data['num_pallets'] }}"><br><br>
+
+        <label for="total_weight">Total Weight (in pounds):</label>
+        <input type="text" id="total_weight" name="total_weight" value="{{ form_data['total_weight'] }}"><br><br>
+
+        <label for="stackable">Stackable:</label>
+        <input type="radio" id="stackable_yes" name="stackable" value="yes" {{ 'checked' if form_data['stackable'] == 'yes' else '' }}>
+        <label for="stackable_yes">Yes</label>
+        <input type="radio" id="stackable_no" name="stackable" value="no" {{ 'checked' if form_data['stackable'] == 'no' else '' }}>
+        <label for="stackable_no">No</label><br><br>
+
+        <input type="submit" value="Check Fit">
+    </form>
+
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
+
+    {% if initial_dims %}
+        <h2>Initial Dimensions and Weight</h2>
+        <table>
+            <tr>
+                <th>Length (in inches)</th>
+                <th>Width (in inches)</th>
+                <th>Height (in inches)</th>
+                <th>Number of Pallets</th>
+                <th>Total Weight (lbs)</th>
+            </tr>
+            <tr>
+                <td>{{ initial_dims['Length'] }}</td>
+                <td>{{ initial_dims['Width'] }}</td>
+                <td>{{ initial_dims['Height'] }}</td>
+                <td>{{ initial_dims['Number of Pallets'] }}</td>
+                <td>{{ initial_dims['Total Weight'] }}</td>
+            </tr>
+        </table>
+    {% endif %}
+
+    {% if fit_results %}
+        <h2>Fit Results</h2>
+        <table>
+            <tr>
+                <th>Vehicle</th>
+                <th>Fit Status</th>
+                <th>Total Length (in inches)</th>
+                <th>Total Width (in inches)</th>
+                <th>Total Height (in inches)</th>
+                <th>Total Weight (lbs)</th>
+            </tr>
+            {% for vehicle, result in fit_results.items() %}
+                <tr>
+                    <td>{{ vehicle }}</td>
+                    <td>{{ result['fits'] }}</td>
+                    <td>{{ result['Total Length'] }}</td>
+                    <td>{{ result['Total Width'] }}</td>
+                    <td>{{ result['Total Height'] }}</td>
+                    <td>{{ result['Total Weight'] }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+</body>
+</html>
